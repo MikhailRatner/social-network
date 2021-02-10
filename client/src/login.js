@@ -1,18 +1,13 @@
-//class components have state!
-// (class components also have lifecycle methods (like componentDidMount))
-
 import { Component } from "react";
 import axios from "./axios";
 import { Link } from "react-router-dom";
 
-export default class Registration extends Component {
+export default class Login extends Component {
     constructor() {
         super();
         this.state = {
             error: false,
         };
-        //strategy #1 for binding
-        //this.handleChange = this.handleChange.bind(this);
     }
 
     //1. we need to sotre the user's input in state
@@ -24,21 +19,16 @@ export default class Registration extends Component {
         //1. send the user's input off to the server (in a POST)
         // remaining tasks: make the red underlines go away!
 
-        if (
-            this.state.first == "" ||
-            this.state.last == "" ||
-            this.state.email == "" ||
-            this.state.password == ""
-        ) {
+        if (this.state.email == "" || this.state.password == "") {
             this.setState({
                 err: true,
             });
         } else {
             axios
-                .post("/registration", this.state)
+                .post("/login", this.state)
                 .then((resp) => {
                     console.log("resp from server: ", resp);
-                    if (resp.data) {
+                    if (!resp.data.error) {
                         location.replace("/");
                     } else {
                         this.setState({
@@ -75,20 +65,8 @@ export default class Registration extends Component {
             <div>
                 {/* this is the syntax for conditions, IF left is true, then the thing after && is executed */}
                 {this.state.error && <p>{this.state.error}</p>}
-                <h1>Registration</h1>
+                <h1>Login</h1>
                 {/* strategy #2 of binding: arrow functions! Do not forget the () after the function name! */}
-                <input
-                    onChange={(e) => this.handleChange(e)}
-                    name="first"
-                    type="text"
-                    placeholder="first"
-                />
-                <input
-                    onChange={(e) => this.handleChange(e)}
-                    name="last"
-                    type="text"
-                    placeholder="last"
-                />
                 <input
                     onChange={(e) => this.handleChange(e)}
                     name="email"
@@ -102,7 +80,8 @@ export default class Registration extends Component {
                     placeholder="password"
                 />
                 <button onClick={() => this.handleClick()}>submit</button>
-                <Link to="/login">Log in!</Link>
+                <Link to="/registration">Register!</Link>
+                <Link to="/reset-password">Reset Password!</Link>
             </div>
         );
     }

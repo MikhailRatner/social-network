@@ -22,3 +22,26 @@ module.exports.updateUserNoPw = (firstName, lastName, email, userID) => {
     const params = [firstName, lastName, email, userID];
     return db.query(q, params);
 };
+
+module.exports.getUserDataByMail = (email) => {
+    const q = `SELECT id, email, password
+    FROM users
+    WHERE email = ($1)`;
+    const params = [email];
+    return db.query(q, params);
+};
+
+module.exports.addResetCode = (email, code) => {
+    const q = `INSERT INTO resetcodes (email, code)
+    VALUES ($1,$2)`;
+    const params = [email, code];
+    return db.query(q, params);
+};
+
+module.exports.getResetPassword = (email) => {
+    const q = `SELECT password FROM resetpasswords
+    WHERE CURRENT_TIMESTAMP - created_at < INTERVAL '10 minutes'
+    AND email = $1`;
+    const params = [email];
+    return db.query(q, params);
+};
