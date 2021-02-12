@@ -12,7 +12,7 @@ export default class ResetPassword extends Component {
     }
 
     sendCode() {
-        if (this.state.email == "" || this.state.password == "") {
+        if (this.state.email == "") {
             this.setState({
                 err: true,
             });
@@ -22,7 +22,7 @@ export default class ResetPassword extends Component {
                 .then((resp) => {
                     console.log("resp from server: ", resp);
                     if (!resp.data.error) {
-                        this.setState.renderView = 2;
+                        this.setState({ renderView: 2 });
                     } else {
                         this.setState({
                             error: resp.data.error,
@@ -44,7 +44,7 @@ export default class ResetPassword extends Component {
             .then((resp) => {
                 console.log("resp from server: ", resp);
                 if (!resp.data.error) {
-                    this.setState.renderView = 3;
+                    this.setState({ renderView: 3 });
                 } else {
                     this.setState({
                         error: resp.data.error,
@@ -95,15 +95,15 @@ export default class ResetPassword extends Component {
                 <div>
                     <input
                         onChange={(e) => this.handleChange(e)}
-                        name="password"
-                        type="password"
-                        placeholder="password"
-                    />
-                    <input
-                        onChange={(e) => this.handleChange(e)}
                         name="code"
                         type="text"
                         placeholder="code"
+                    />
+                    <input
+                        onChange={(e) => this.handleChange(e)}
+                        name="password"
+                        type="password"
+                        placeholder="password"
                     />
                     <button onClick={() => this.verifyCode()}>submit</button>
                 </div>
@@ -131,14 +131,3 @@ export default class ResetPassword extends Component {
         );
     }
 }
-
-/*     render() {
-        return (
-            <div>
-                {this.state.renderView === 1 && <p>RenderView 1</p>}
-                {this.state.renderView === 2 && <p>RenderView 1</p>}
-                {this.state.renderView === 3 && <p>RenderView 1</p>}
-                
-            </div>
-        );
-    } */

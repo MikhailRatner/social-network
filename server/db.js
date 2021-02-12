@@ -15,11 +15,19 @@ module.exports.addUser = (firstName, lastName, email, password) => {
     return db.query(q, params);
 };
 
-module.exports.updateUserNoPw = (firstName, lastName, email, userID) => {
+module.exports.updatePwByEmail = (email, newPassword) => {
     const q = `UPDATE users
-    SET first = $1, last = $2, email = $3
-    WHERE id = $4`;
-    const params = [firstName, lastName, email, userID];
+    SET password = $2
+    WHERE email = $1`;
+    const params = [email, newPassword];
+    return db.query(q, params);
+};
+
+module.exports.updateImgById = (id, img) => {
+    const q = `UPDATE users
+    SET profile_pic_url = $2
+    WHERE id = $1`;
+    const params = [id, img];
     return db.query(q, params);
 };
 
@@ -31,17 +39,25 @@ module.exports.getUserDataByMail = (email) => {
     return db.query(q, params);
 };
 
+module.exports.getUserDataById = (id) => {
+    const q = `SELECT *
+    FROM users
+    WHERE id = ($1)`;
+    const params = [id];
+    return db.query(q, params);
+};
+
 module.exports.addResetCode = (email, code) => {
-    const q = `INSERT INTO resetcodes (email, code)
+    const q = `INSERT INTO reset_codes (email, code)
     VALUES ($1,$2)`;
     const params = [email, code];
     return db.query(q, params);
 };
 
-module.exports.getResetPassword = (email) => {
-    const q = `SELECT password FROM resetpasswords
-    WHERE CURRENT_TIMESTAMP - created_at < INTERVAL '10 minutes'
-    AND email = $1`;
-    const params = [email];
+module.exports.getResetCode = (code) => {
+    const q = `SELECT * FROM reset_codes
+    WHERE CURRENT_TIMESTAMP - timestamp < INTERVAL '10 minutes'
+    AND code = $1`;
+    const params = [code];
     return db.query(q, params);
 };

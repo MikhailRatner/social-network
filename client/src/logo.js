@@ -1,8 +1,7 @@
 export default function Logo() {
     return (
         <>
-            <h1>Logo</h1>
-            <img src="/Users/mratner/Desktop/adobo-socialnetwork/client/public/icon.svg" />
+            <img className="logoImg" src="./icon.svg" width="70px" />
         </>
     );
 }

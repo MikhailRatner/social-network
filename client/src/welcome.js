@@ -3,13 +3,13 @@ import { HashRouter, Route } from "react-router-dom";
 import Registration from "./registration";
 import Login from "./login";
 import ResetPassword from "./reset-password";
+import Logo from "./logo";
 
-//"dumb" or "presentational" are alternative names for function components, pre-hook times
+//function component, pre-hook times,"dumb" or "presentational" are alternative names
 export default function Welcome() {
     return (
         <div id="welcome">
-            <h1>Welcome!</h1>
-            <img src="./client/icon.svg" />
+            <Logo />
             <HashRouter>
                 <div>
                     <Route exact path="/" component={Registration} />

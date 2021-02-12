@@ -80,7 +80,7 @@ export default class Login extends Component {
                     placeholder="password"
                 />
                 <button onClick={() => this.handleClick()}>submit</button>
-                <Link to="/registration">Register!</Link>
+                <Link to="/">Register!</Link>
                 <Link to="/reset-password">Reset Password!</Link>
             </div>
         );

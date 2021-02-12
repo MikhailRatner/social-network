@@ -1,4 +1,21 @@
 body {
-    background-color: ghostwhite;
+    background-color: rgb(168, 168, 230);
 }
 
+.app {
+    border: 3px rgb(152, 135, 227) solid;
+    display: flex;
+    justify-content: space-between;
+}
+
+.logoImg {
+    border: 3px rgb(159, 97, 97) solid;
+}
+
+.profile-pic {
+    border: 3px rgb(230, 230, 164) solid;
+}
+
+.uploader {
+    border: 3px silver solid;
+}
