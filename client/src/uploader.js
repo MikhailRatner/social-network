@@ -8,6 +8,7 @@ export default class Uploader extends Component {
             error: false,
             file: null,
         };
+        console.log("PROPS: ", props);
     }
 
     handleChange(e) {
@@ -31,7 +32,6 @@ export default class Uploader extends Component {
             //TODO: Update the state of App with the new ProfilePic once available
             this.props.setProfilePicUrl(data);
             //this.setState({ file: data });
-            console.log("PROPS AFTER UPLOAD: ", this.props);
         } catch (err) {
             console.log("err in Upload Image", err);
             this.setState({

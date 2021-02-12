@@ -26,7 +26,8 @@ module.exports.updatePwByEmail = (email, newPassword) => {
 module.exports.updateImgById = (id, img) => {
     const q = `UPDATE users
     SET profile_pic_url = $2
-    WHERE id = $1`;
+    WHERE id = $1
+    RETURNING *`;
     const params = [id, img];
     return db.query(q, params);
 };

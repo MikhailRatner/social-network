@@ -147,13 +147,17 @@ app.post(
         //console.log("COOKIE ID: ", req.session.userId);
         if (req.file) {
             console.log("THERE IS A FILE!");
-            req.body.url = s3Url + req.file.filename;
-            console.log("IMG URL", req.body.url);
+            let fullUrl = s3Url + req.file.filename;
+            console.log("Full URL", fullUrl);
 
             try {
-                await db.updateImgById(req.session.userId, req.body.url);
+                const { rows } = await db.updateImgById(
+                    req.session.userId,
+                    fullUrl
+                );
+                console.log("ROWS: ", rows);
                 //console.log("DATA:", user); //nested desrtucturing, the first item of rows will be named user
-                res.json(req.body.url);
+                res.json(rows[0].profile_pic_url);
             } catch (err) {
                 console.log("err in GET /user", err.message);
                 console.log(err.code);
