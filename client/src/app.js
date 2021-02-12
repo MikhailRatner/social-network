@@ -44,16 +44,16 @@ export default class App extends Component {
         });
     }
 
-    test(imgUrl) {
+    updateProfilePic(imgUrl) {
         // TODO: Updates the "profilePicUrl" in the state
         // TODO: Hides the uploader
-        console.log("setProfilePicUrl RUNS!");
+        console.log("updateProfilePic RUNS!");
         console.log("IMG URL: ", imgUrl);
         this.setState({
             profilePicUrl: imgUrl,
             uploaderVisible: false,
         });
-        //console.log("setProfilePicUrl DONE!");
+        console.log("updateProfilePic DONE!");
     }
 
     render() {
@@ -70,10 +70,7 @@ export default class App extends Component {
                 />
                 {/*Conditionally render the Uploader: */}
                 {this.state.uploaderVisible && (
-                    <Uploader
-                        // Passing down methods with arrow function (no binding needed):
-                        updateProfilePic={() => this.test()}
-                    />
+                    <Uploader updateProfilePic={this.updateProfilePic} />
                 )}
             </div>
         );

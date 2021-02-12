@@ -30,7 +30,8 @@ export default class Uploader extends Component {
             console.log("DATA FROM uploadImg response: ", data);
 
             //TODO: Update the state of App with the new ProfilePic once available
-            this.props.setProfilePicUrl(data);
+            await this.props.updateProfilePic(data);
+            return;
             //this.setState({ file: data });
         } catch (err) {
             console.log("err in Upload Image", err);
