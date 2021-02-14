@@ -122,7 +122,7 @@ app.get("/user", async (req, res) => {
         const {
             rows: [user],
         } = await db.getUserDataById(req.session.userId);
-        //console.log("DATA:", user); //nested desrtucturing, the first item of rows will be named user
+        console.log("DATA:", user); //nested desrtucturing, the first item of rows will be named user
         res.json(user);
     } catch (err) {
         console.log("err in GET /user", err.message);
@@ -168,6 +168,28 @@ app.post(
         }
     }
 );
+
+//////////////////////
+//// UPDATE BIO  /////
+//////////////////////
+
+app.post("/update-bio", async (req, res) => {
+    //console.log("you've made it inside /update-bio!");
+    //console.log("REQ BODY", req.body);
+
+    try {
+        const { rows } = await db.updateBio(req.session.userId, req.body.bio);
+        //console.log("ROWS: ", rows);
+        //console.log("DATA:", user); //nested desrtucturing, the first item of rows will be named user
+        res.json(rows[0].bio);
+    } catch (err) {
+        console.log("err in POST /update-bio", err.message);
+        console.log(err.code);
+        res.json({
+            error: err.code,
+        });
+    }
+});
 
 //////////////////////
 ///// SEND CODE //////

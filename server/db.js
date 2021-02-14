@@ -32,6 +32,15 @@ module.exports.updateImgById = (id, img) => {
     return db.query(q, params);
 };
 
+module.exports.updateBio = (id, bio) => {
+    const q = `UPDATE users
+    SET bio = $2
+    WHERE id = $1
+    RETURNING *`;
+    const params = [id, bio];
+    return db.query(q, params);
+};
+
 module.exports.getUserDataByMail = (email) => {
     const q = `SELECT id, email, password
     FROM users

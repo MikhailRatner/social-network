@@ -1,5 +1,5 @@
 export default function ProfilePic(props) {
-    console.log("PROPS:", props);
+    //console.log("PROPS:", props);
 
     return (
         <div onClick={props.toggleUploader} className="profile-pic">

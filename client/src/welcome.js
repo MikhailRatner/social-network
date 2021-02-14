@@ -1,9 +1,9 @@
 // src.welcome.js
 import { HashRouter, Route } from "react-router-dom";
-import Registration from "./registration";
-import Login from "./login";
-import ResetPassword from "./reset-password";
-import Logo from "./logo";
+import Registration from "./Registration";
+import Login from "./Login";
+import ResetPassword from "./Reset-password";
+import Logo from "./Logo";
 
 //function component, pre-hook times,"dumb" or "presentational" are alternative names
 export default function Welcome() {

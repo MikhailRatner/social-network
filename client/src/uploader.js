@@ -1,5 +1,5 @@
 import { Component } from "react";
-import axios from "./axios";
+import axios from "./Axios";
 
 export default class Uploader extends Component {
     constructor(props) {
@@ -8,7 +8,7 @@ export default class Uploader extends Component {
             error: false,
             file: null,
         };
-        console.log("PROPS: ", props);
+        //console.log("PROPS: ", props);
     }
 
     handleChange(e) {
@@ -27,7 +27,7 @@ export default class Uploader extends Component {
 
         try {
             const { data } = await axios.post("/profile-pic", formData);
-            console.log("DATA FROM uploadImg response: ", data);
+            //console.log("DATA FROM uploadImg response: ", data);
 
             //TODO: Update the state of App with the new ProfilePic once available
             await this.props.updateProfilePic(data);
