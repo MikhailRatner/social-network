@@ -57,6 +57,17 @@ module.exports.getUserDataById = (id) => {
     return db.query(q, params);
 };
 
+module.exports.getRecentProfiles = () => {
+    return db.query(`SELECT * FROM users ORDER BY id DESC LIMIT 3`);
+};
+
+module.exports.getFindPeople = (inputVal) => {
+    return db.query(
+        `SELECT * FROM users WHERE first ILIKE $1 OR last ILIKE $1 LIMIT 10;`,
+        [inputVal + "%"]
+    );
+};
+
 module.exports.addResetCode = (email, code) => {
     const q = `INSERT INTO reset_codes (email, code)
     VALUES ($1,$2)`;

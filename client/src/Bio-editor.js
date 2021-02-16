@@ -7,7 +7,6 @@ export default class BioEditor extends Component {
         this.state = {
             editingMode: false,
             error: false,
-            bio: props.bio,
         };
     }
 
@@ -36,7 +35,7 @@ export default class BioEditor extends Component {
     }
 
     async updateBio() {
-        if (this.state.bio == "") {
+        if (this.state.biography == "") {
             this.setState({
                 err: true,
             });
@@ -46,7 +45,7 @@ export default class BioEditor extends Component {
                 console.log("data from server: ", data);
 
                 if (!data.error) {
-                    this.setState({ editingMode: 1, bio: data });
+                    this.setState({ editingMode: 1, biography: data });
                     console.log("NEW BIO IS", data);
                 } else {
                     this.setState({
@@ -64,7 +63,7 @@ export default class BioEditor extends Component {
 
     determineWhichModeToRender() {
         // this method determines what the render!
-        if (this.state.editingMode == false && !this.state.bio) {
+        if (this.state.editingMode == false && !this.props.bio) {
             return (
                 <div>
                     <button onClick={() => this.toggleEditor()}>ADD BIO</button>
@@ -75,19 +74,19 @@ export default class BioEditor extends Component {
                 <div>
                     <textarea
                         onChange={(e) => this.handleChange(e)}
-                        name="bio"
+                        name="biography"
                         id="textAreaProfile"
                         cols="30"
                         rows="10"
-                        value={this.state.bio}
+                        value={this.state.biography || this.props.bio}
                     ></textarea>
                     <button onClick={() => this.updateBio()}>SAVE</button>
                 </div>
             );
-        } else if (this.state.bio) {
+        } else if (this.props.bio || this.state.biography) {
             return (
                 <div>
-                    <p>{this.state.bio}</p>
+                    <p>{this.state.biography || this.props.bio}</p>
                     <button onClick={() => this.toggleEditor()}>
                         EDIT BIO
                     </button>
@@ -99,8 +98,6 @@ export default class BioEditor extends Component {
     render() {
         return (
             <div>
-                <h1>Render Mode {this.state.editingMode}</h1>
-                <p>This is the bio: {this.state.bio}</p>
                 {this.state.error && <p>{this.state.error}</p>}
 
                 {/* call the method */}
@@ -109,3 +106,6 @@ export default class BioEditor extends Component {
         );
     }
 }
+/* 
+                <h1>Render Mode {this.state.editingMode}</h1>
+                <p>This is the bio: {this.state.bio}</p> */

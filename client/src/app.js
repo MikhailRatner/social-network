@@ -4,6 +4,9 @@ import ProfilePic from "./Profile-pic";
 import Uploader from "./Uploader";
 import Profile from "./Profile";
 import axios from "./Axios";
+import { BrowserRouter, Route } from "react-router-dom";
+import OtherProfile from "./OtherProfile";
+import FindPeople from "./FindPeople";
 
 export default class App extends Component {
     constructor(props) {
@@ -60,34 +63,71 @@ export default class App extends Component {
 
     render() {
         return (
-            <div className={"app"}>
-                <div className={"header"}>
-                    <Logo />
-                    <ProfilePic
-                        // Passing down props:
-                        firstName={this.state.firstName}
-                        lastName={this.state.lastName}
-                        profilePicUrl={this.state.profilePicUrl}
-                        bio={this.state.bio}
-                        // Passing down methods as standard functions (binding needed):
-                        toggleUploader={() => this.toggleUploader()}
-                    />
-                    {/*Conditionally render the Uploader: */}
-                    {this.state.uploaderVisible && (
-                        <Uploader
-                            updateProfilePic={(imgUrl) =>
-                                this.updateProfilePic(imgUrl)
-                            }
+            <BrowserRouter>
+                <div className={"app"}>
+                    <div className={"header"}>
+                        <Logo />
+                        <ProfilePic
+                            // Passing down props:
+                            firstName={this.state.firstName}
+                            lastName={this.state.lastName}
+                            profilePicUrl={this.state.profilePicUrl}
+                            bio={this.state.bio}
+                            // Passing down methods as standard functions (binding needed):
+                            toggleUploader={() => this.toggleUploader()}
                         />
-                    )}
-                </div>
+                        {/*Conditionally render the Uploader: */}
+                        {this.state.uploaderVisible && (
+                            <Uploader
+                                updateProfilePic={(imgUrl) =>
+                                    this.updateProfilePic(imgUrl)
+                                }
+                            />
+                        )}
+                    </div>
 
-                <Profile
-                    firstName={this.state.firstName}
-                    lastName={this.state.lastName}
-                    profilePicUrl={this.state.profilePicUrl}
-                />
-            </div>
+                    <div>
+                        <Route
+                            exact
+                            path="/"
+                            render={() => (
+                                <Profile
+                                    id={this.state.id}
+                                    firstName={this.state.firstName}
+                                    lastName={this.state.lastName}
+                                    profilePicUrl={this.state.profilePicUrl}
+                                    onClick={this.toggleUploader}
+                                    bio={this.state.bio}
+                                />
+                            )}
+                        />
+                        <Route
+                            path="/user/:id"
+                            render={(props) => (
+                                <OtherProfile
+                                    key={props.match.url}
+                                    match={props.match}
+                                    history={props.history}
+                                />
+                            )}
+                        />
+                        <Route
+                            path="/users"
+                            render={(props) => (
+                                <FindPeople
+                                    key={props.match.url}
+                                    match={props.match}
+                                    history={props.history}
+                                />
+                            )}
+                        />
+                    </div>
+                </div>
+            </BrowserRouter>
         );
     }
 }
+
+/* from Profile route
+    setBio={this.setBio}
+*/

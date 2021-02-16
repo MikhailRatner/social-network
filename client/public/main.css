@@ -30,3 +30,25 @@ body {
     width: 120px;
     /* image within the profile component is bigger than the one in the header */
 }
+
+.otherProfile {
+    border: 3px purple solid;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.otherProfile img {
+    width: 120px;
+    /* image within the profile component is bigger than the one in the header */
+}
+
+.otherProfileImgAndText {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.otherProfileBio {
+    width: 80%;
+}

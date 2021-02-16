@@ -178,12 +178,69 @@ app.post("/update-bio", async (req, res) => {
     //console.log("REQ BODY", req.body);
 
     try {
-        const { rows } = await db.updateBio(req.session.userId, req.body.bio);
+        const { rows } = await db.updateBio(
+            req.session.userId,
+            req.body.biography
+        );
         //console.log("ROWS: ", rows);
         //console.log("DATA:", user); //nested desrtucturing, the first item of rows will be named user
         res.json(rows[0].bio);
     } catch (err) {
         console.log("err in POST /update-bio", err.message);
+        console.log(err.code);
+        res.json({
+            error: err.code,
+        });
+    }
+});
+
+//////////////////////
+/// OTHER PROFILE  ///
+//////////////////////
+
+app.get("/api/user/:id", async (req, res) => {
+    let { id } = req.params;
+    console.log("LOG REQ PARAMS: ", id);
+
+    try {
+        const {
+            rows: [user],
+        } = await db.getUserDataById(id);
+        console.log("DATA:", user); //nested desrtucturing, the first item of rows will be named user
+        if (id != req.session.userId) {
+            res.json(user);
+        } else {
+            res.json({ same: true });
+        }
+    } catch (err) {
+        console.log("err in GET /user", err.message);
+        console.log(err.code);
+        res.json({
+            error: err.code,
+        });
+    }
+});
+
+//////////////////////
+//// FIND PEOPLE  ////
+//////////////////////
+
+app.get("/api/users/:inputVal?", async (req, res) => {
+    let { inputVal } = req.params;
+    console.log("LOG REQ PARAMS GET /users/:find: ", inputVal);
+
+    try {
+        if (!inputVal) {
+            const { rows } = await db.getRecentProfiles();
+            console.log("DATA RECENT PROFILES:", rows); //nested desrtucturing, the first item of rows will be named user
+            res.json(rows);
+        } else {
+            const { rows } = await db.getFindPeople(inputVal);
+            console.log("DATA FIND PEOPLE:", rows); //nested desrtucturing, the first item of rows will be named user
+            res.json(rows);
+        }
+    } catch (err) {
+        console.log("err in GET /users/:find", err.message);
         console.log(err.code);
         res.json({
             error: err.code,
