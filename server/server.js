@@ -249,6 +249,57 @@ app.get("/api/users/:inputVal?", async (req, res) => {
 });
 
 //////////////////////
+/// FRIEND STATUS  ///
+//////////////////////
+
+app.get("/friendstatus/:userId/:otherId", async (req, res) => {
+    let { userId, otherId } = req.params;
+    console.log("LOG REQ PARAMS: ", userId);
+    console.log("LOG REQ PARAMS: ", otherId);
+
+    try {
+        const { rows } = await db.checkFriendStatus(userId, otherId);
+        console.log("DATA in friendstatus:", rows); //nested desrtucturing, the first item of rows will be named user
+        if (rows.length == 0) {
+            res.json("Send Friend Request"); //there is no array, no friendship -> render "make friend request" button
+        } else if (rows[0].accepted) {
+            res.json("Unfriend");
+        } else if (rows[0].recipient_id == userId) {
+            res.json("Cancel Friend Request");
+        } else {
+            res.json("Accept Friend Request");
+        }
+    } catch (err) {
+        console.log("err in GET /friendstatus", err.message);
+        console.log(err.code);
+        res.json({
+            error: err.code,
+        });
+    }
+});
+
+app.post("/friendstatus/:userId/:otherId", async (req, res) => {
+    let { userId, otherId } = req.params;
+    console.log("LOG REQ PARAMS: ", userId);
+    console.log("LOG REQ PARAMS: ", otherId);
+    console.log("REQ BODY POST friendstatus: ", req.body.text);
+    let text = req.body.text;
+
+    if (text == "Send Friend Request") {
+        const { rows } = await db.updateFriendStatus(userId, otherId, false);
+        console.log("ROWS", rows);
+        res.json("Cancel Friend Request");
+    } else if (text == "Cancel Friend Request") {
+        const { rows } = await db.updateFriendStatus(null, null, null);
+        console.log("ROWS", rows);
+        res.json("Send Friend Request");
+    } else if (text == "Accept Friend Request") {
+        const { rows } = await db.updateFriendStatus(userId, otherId, false);
+        console.log("ROWS", rows);
+        res.json("Send Friend Request");
+});
+
+//////////////////////
 ///// SEND CODE //////
 //////////////////////
 

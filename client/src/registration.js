@@ -1,3 +1,48 @@
+import { Link } from "react-router-dom";
+import { useStatefulFields } from "./useStatefulFields";
+import useAuthSubmit from "./useAuthSubmit";
+
+export default function Registration() {
+    const [values, handleChange] = useStatefulFields();
+    const [error, handleSubmit] = useAuthSubmit("/registration", values);
+
+    return (
+        <div>
+            {/* this is the syntax for conditions, IF left is true, then the thing after && is executed */}
+            {error && <p>{error}</p>}
+            <h1>Registration</h1>
+            {/* strategy #2 of binding: arrow functions! Do not forget the () after the function name! */}
+            <input
+                onChange={handleChange}
+                name="first"
+                type="text"
+                placeholder="first"
+            />
+            <input
+                onChange={handleChange}
+                name="last"
+                type="text"
+                placeholder="last"
+            />
+            <input
+                onChange={handleChange}
+                name="email"
+                type="text"
+                placeholder="email"
+            />
+            <input
+                onChange={handleChange}
+                name="password"
+                type="password"
+                placeholder="password"
+            />
+            <button onClick={handleSubmit}>submit</button>
+            <Link to="/login">Log in!</Link>
+        </div>
+    );
+}
+
+/* CLASS COMPONENT BELOW! ABOVE IS THE CHANGE FUNCTION COMPONENT WITH HOOKS
 //class components have state!
 // (class components also have lifecycle methods (like componentDidMount))
 
@@ -73,10 +118,10 @@ export default class Registration extends Component {
     render() {
         return (
             <div>
-                {/* this is the syntax for conditions, IF left is true, then the thing after && is executed */}
+                //this is the syntax for conditions, IF left is true, then the thing after && is executed
                 {this.state.error && <p>{this.state.error}</p>}
                 <h1>Registration</h1>
-                {/* strategy #2 of binding: arrow functions! Do not forget the () after the function name! */}
+                //strategy #2 of binding: arrow functions! Do not forget the () after the function name!
                 <input
                     onChange={(e) => this.handleChange(e)}
                     name="first"
@@ -107,3 +152,5 @@ export default class Registration extends Component {
         );
     }
 }
+
+*/

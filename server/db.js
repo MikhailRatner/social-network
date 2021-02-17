@@ -68,6 +68,23 @@ module.exports.getFindPeople = (inputVal) => {
     );
 };
 
+module.exports.checkFriendStatus = (userId, otherId) => {
+    const q = `SELECT * FROM friendships
+    WHERE (recipient_id = $1 AND sender_id = $2)
+    OR (recipient_id = $2 AND sender_id = $1)`;
+    const params = [userId, otherId];
+    return db.query(q, params);
+};
+
+module.exports.updateFriendStatus = (userId, otherId, status) => {
+    const q = `UPDATE friendships
+    SET accepted = $3
+    WHERE (recipient_id = $1 AND sender_id = $2)
+    OR (recipient_id = $2 AND sender_id = $1)`;
+    const params = [userId, otherId, status];
+    return db.query(q, params);
+};
+
 module.exports.addResetCode = (email, code) => {
     const q = `INSERT INTO reset_codes (email, code)
     VALUES ($1,$2)`;

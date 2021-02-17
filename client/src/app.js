@@ -7,6 +7,7 @@ import axios from "./Axios";
 import { BrowserRouter, Route } from "react-router-dom";
 import OtherProfile from "./OtherProfile";
 import FindPeople from "./FindPeople";
+import FriendshipButton from "./FriendshipButton";
 
 export default class App extends Component {
     constructor(props) {
@@ -108,6 +109,7 @@ export default class App extends Component {
                                     key={props.match.url}
                                     match={props.match}
                                     history={props.history}
+                                    id={this.state.id}
                                 />
                             )}
                         />
