@@ -76,12 +76,21 @@ module.exports.checkFriendStatus = (userId, otherId) => {
     return db.query(q, params);
 };
 
-module.exports.updateFriendStatus = (userId, otherId, status) => {
-    const q = `UPDATE friendships
-    SET accepted = $3
+module.exports.upsertFriendStatus = (userId, otherId, status) => {
+    const q = `INSERT INTO friendships (sender_id, recipient_id, accepted)
+    VALUES ($1,$2,$3)
+    ON CONFLICT WHERE (recipient_id = $1 AND sender_id = $2)
+    OR (recipient_id = $2 AND sender_id = $1)
+    DO UPDATE SET sender_id = $1, recipient_id = $2, accepted = $3`;
+    const params = [userId, otherId, status];
+    return db.query(q, params);
+};
+
+module.exports.deleteFriendStatus = (userId, otherId) => {
+    const q = `DELETE * FROM friendships
     WHERE (recipient_id = $1 AND sender_id = $2)
     OR (recipient_id = $2 AND sender_id = $1)`;
-    const params = [userId, otherId, status];
+    const params = [userId, otherId];
     return db.query(q, params);
 };
 

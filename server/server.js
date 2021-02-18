@@ -280,23 +280,41 @@ app.get("/friendstatus/:userId/:otherId", async (req, res) => {
 
 app.post("/friendstatus/:userId/:otherId", async (req, res) => {
     let { userId, otherId } = req.params;
-    console.log("LOG REQ PARAMS: ", userId);
-    console.log("LOG REQ PARAMS: ", otherId);
+    // console.log("LOG REQ PARAMS: ", userId);
+    // console.log("LOG REQ PARAMS: ", otherId);
     console.log("REQ BODY POST friendstatus: ", req.body.text);
     let text = req.body.text;
 
     if (text == "Send Friend Request") {
-        const { rows } = await db.updateFriendStatus(userId, otherId, false);
+        const { rows } = await db.upsertFriendStatus(userId, otherId, "sent");
         console.log("ROWS", rows);
         res.json("Cancel Friend Request");
     } else if (text == "Cancel Friend Request") {
-        const { rows } = await db.updateFriendStatus(null, null, null);
+        const { rows } = await db.upsertFriendStatus(
+            userId,
+            otherId,
+            "canceled"
+        );
         console.log("ROWS", rows);
         res.json("Send Friend Request");
     } else if (text == "Accept Friend Request") {
-        const { rows } = await db.updateFriendStatus(userId, otherId, false);
+        const { rows } = await db.upsertFriendStatus(
+            userId,
+            otherId,
+            "accepted"
+        );
+        console.log("ROWS", rows);
+        res.json("End Friendship");
+    } else if (text == "End Friendship") {
+        const { rows } = await db.deleteFriendStatus(userId, otherId);
         console.log("ROWS", rows);
         res.json("Send Friend Request");
+    } else {
+        console.log("BUTTON TEXT DOES NOT CORRESPOND THE CONDITIONS");
+        res.json({
+            error: true,
+        });
+    }
 });
 
 //////////////////////

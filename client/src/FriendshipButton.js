@@ -30,6 +30,10 @@ export default function FriendshipButton(props) {
         console.log("PROPS USER ID: ", props.userId);
         console.log("PROPS OTHER ID: ", props.otherId);
 
+        if (!userId) {
+            return; //this stop useEffect running in case the userId is still undefined. When the userId get assigned a value, useEffect runs again (due to dependecie within the array after useEffect) and skip this condition
+        }
+
         (async () => {
             try {
                 const { data } = await axios.get(
@@ -64,6 +68,17 @@ export default function FriendshipButton(props) {
         );
         console.log("DATA IN HANDLE SUBMIT FRIEND REQUEST:", data);
         setbuttonText(data);
+
+        //CLIENT SERVER LOGIC IS POSSIBLE, BUT I DECIDED TO DO IT ON THE SERVER SIDE. THIS WAS CLIENT SIDE LOGIC:
+        // if (data == "Send Friend Request") {
+        //     setbuttonText("Cancel Friend Request");
+        // } else if (data == "Cancel Friend Request") {
+        //     setbuttonText("Send Friend Request");
+        // } else if (data == "Accept Friend Request") {
+        //     setbuttonText("End Friendship");
+        // } else if (data == "End Friendship") {
+        //     setbuttonText("Send Friend Request");
+        // }
     };
 
     return (
