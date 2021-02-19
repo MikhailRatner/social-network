@@ -3,10 +3,10 @@
 
 import axios from "axios";
 
-export async function receiveAllFriends(userId) {
+export async function receiveAllFriends() {
     //console.log("userId WITHIN receiveWannabeFriends", userId);
     //we can OPTIONALLY "talk" to the server here...
-    const { data } = await axios.get(`/friends/${userId}`);
+    const { data } = await axios.get(`/get-friends`);
     //we always return an object that is our action
     console.log("DATA WITHIN receiveWannabeFriends", data);
     return {

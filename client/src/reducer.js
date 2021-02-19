@@ -7,7 +7,7 @@ export function reducer(state = {}, action) {
 
         state = {
             ...state,
-            action,
+            allFriends: action.allFriends,
         };
 
         console.log("NEW STATE IN REDUCER:", state);

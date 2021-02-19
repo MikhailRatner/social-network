@@ -252,9 +252,9 @@ app.get("/api/users/:inputVal?", async (req, res) => {
 ////// FRIENDS  //////
 //////////////////////
 
-app.get("/friends/:userId", async (req, res) => {
-    let { userId } = req.params;
-    console.log("LOG REQ PARAMS: ", userId);
+app.get("/get-friends", async (req, res) => {
+    let userId = req.session.userId;
+    console.log("LOG REQ SESSION: ", userId);
 
     try {
         const { rows } = await db.getFriends(userId);
