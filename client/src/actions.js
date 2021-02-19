@@ -1,7 +1,7 @@
 //thiw will contain all of our action creators
 //an action creator is afunction that returns an object
 
-import axios from "axios";
+import axios from "./Axios";
 
 export async function receiveAllFriends() {
     //console.log("userId WITHIN receiveWannabeFriends", userId);
@@ -11,6 +11,36 @@ export async function receiveAllFriends() {
     console.log("DATA WITHIN receiveWannabeFriends", data);
     return {
         type: "RECEIVE_ALL_FRIENDS",
-        allFriends: data,
+        payload: data,
+    };
+}
+
+export async function acceptFriendRequest(otherId) {
+    //console.log("userId WITHIN receiveWannabeFriends", userId);
+    //we can OPTIONALLY "talk" to the server here...
+    let buttonText = "Accept Friend Request";
+    const { data } = await axios.post(`/friendstatus/${otherId}`, {
+        text: buttonText,
+    });
+    //we always return an object that is our action
+    console.log("DATA WITHIN acceptFriendRequest", data);
+    return {
+        type: "ACCEPT_FRIEND_REQUEST",
+        payload: data,
+    };
+}
+
+export async function endFriendship(otherId) {
+    //console.log("userId WITHIN receiveWannabeFriends", userId);
+    //we can OPTIONALLY "talk" to the server here...
+    let buttonText = "End Friendship";
+    const { data } = await axios.post(`/friendstatus/${otherId}`, {
+        text: buttonText,
+    });
+    //we always return an object that is our action
+    console.log("DATA WITHIN endFriendship", data);
+    return {
+        type: "END_FRIENDSHIP",
+        payload: data,
     };
 }

@@ -7,7 +7,6 @@ export default function FriendshipButton(props) {
     // needs to get passed the id of the user that we are currently viewing
     // console.log("INSIDE FRIENDSHIP BUTTON, PROPS: ", props);
 
-    let userId = props.userId;
     let otherId = props.otherId;
 
     // we will either want to befriend that user, cancel a request we made in the past,
@@ -30,15 +29,9 @@ export default function FriendshipButton(props) {
         // console.log("PROPS USER ID: ", props.userId);
         // console.log("PROPS OTHER ID: ", props.otherId);
 
-        if (!userId) {
-            return; //this stop useEffect running in case the userId is still undefined. When the userId get assigned a value, useEffect runs again (due to dependecie within the array after useEffect) and skip this condition
-        }
-
         (async () => {
             try {
-                const { data } = await axios.get(
-                    `/friendstatus/${userId}/${otherId}`
-                );
+                const { data } = await axios.get(`/friendstatus/${otherId}`);
                 console.log("DATA AXIOS FRIENDSTATUS:", data);
                 if (!abort) {
                     setbuttonText(data);
@@ -53,7 +46,7 @@ export default function FriendshipButton(props) {
             console.log("friendstatus in returned functions");
             abort = true;
         };
-    }, [userId, otherId]);
+    }, [otherId]);
 
     // on submit/ btn click we want to send the button text to the server,
     //to update our db, and change the btn text again, once the DB has
@@ -62,10 +55,9 @@ export default function FriendshipButton(props) {
     const handleSubmit = async () => {
         console.log("REQUEST SENT");
 
-        const { data } = await axios.post(
-            `/friendstatus/${userId}/${otherId}`,
-            { text: buttonText }
-        );
+        const { data } = await axios.post(`/friendstatus/${otherId}`, {
+            text: buttonText,
+        });
         console.log("DATA IN HANDLE SUBMIT FRIEND REQUEST:", data);
         setbuttonText(data);
 
@@ -99,3 +91,15 @@ export default function FriendshipButton(props) {
         </button>
     );
 } */
+
+/* THIS WORKD BUT IT IS BETTER TO GET THE USER ID FROM THE SERVER. RESULTS IN LESS CODE AND LESS WAITING TIME FOR THE PAGE TO LOAD
+axios.get(`/friendstatus/${userId}/${otherId}`);
+
+THIS HAD TO BE BEFORE USE EFFECT / AXIOS REQUEST, SO IT STOPS MOUNTING
+
+        if (!userId) {
+            return; //this stop useEffect running in case the userId is still undefined. When the userId get assigned a value, useEffect runs again (due to dependecie within the array after useEffect) and skip this condition
+        }
+
+USERID SHOULD BE IN THE ARRAY AFTER USEEFFECT AS A DEPENDENCY, SO WHEN USERID GETS UPDATED USEEFFECT RUNS AGAIN
+*/

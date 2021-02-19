@@ -8,7 +8,6 @@ import { BrowserRouter, Route } from "react-router-dom";
 import OtherProfile from "./OtherProfile";
 import FindPeople from "./FindPeople";
 import Friends from "./Friends";
-import FriendshipButton from "./FriendshipButton";
 
 export default class App extends Component {
     constructor(props) {
@@ -118,7 +117,6 @@ export default class App extends Component {
                             path="/friends"
                             render={(props) => (
                                 <Friends
-                                    id={this.state.id}
                                     key={props.match.url}
                                     match={props.match}
                                     history={props.history}

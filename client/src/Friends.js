@@ -1,6 +1,10 @@
 import { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { receiveAllFriends } from "./actions";
+import {
+    receiveAllFriends,
+    acceptFriendRequest,
+    endFriendship,
+} from "./actions";
 
 export default function Friends() {
     //console.log("PROPS INSIDE Friends component", props);
@@ -19,9 +23,8 @@ export default function Friends() {
             state.allFriends.filter((allFriends) => allFriends.accepted == true)
     );
 
-    console.log("wannabeFriends 1", wannabeFriends);
-    console.log("currentFriends 1", currentFriends);
-
+    // console.log("wannabeFriends 1", wannabeFriends);
+    // console.log("currentFriends 1", currentFriends);
     // const [wannabeFriends, setwannabeFriends] = useState([]);
     // const [currentFriends, setcurrentFriends] = useState([]);
 
@@ -47,6 +50,13 @@ export default function Friends() {
                             <p>
                                 {elem.first} {elem.last}
                             </p>
+                            <button
+                                onClick={() =>
+                                    dispatch(acceptFriendRequest(elem.id))
+                                }
+                            >
+                                Accept Friend Request
+                            </button>
                         </div>
                     );
                 })}
@@ -63,6 +73,11 @@ export default function Friends() {
                             <p>
                                 {elem.first} {elem.last}
                             </p>
+                            <button
+                                onClick={() => dispatch(endFriendship(elem.id))}
+                            >
+                                End Friendship
+                            </button>
                         </div>
                     );
                 })}

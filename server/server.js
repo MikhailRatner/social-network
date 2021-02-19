@@ -11,6 +11,8 @@ const s3 = require("./s3");
 const { s3Url } = require("./config.json");
 const { uploader } = require("./upload");
 
+const { requireLoggedOutUser, requireLoggedInUser } = require("./middleware");
+
 const app = express();
 app.use(compression());
 app.use(express.static(path.join(__dirname, "..", "client", "public")));
@@ -92,7 +94,7 @@ app.post("/login", (req, res) => {
                 (match) => {
                     //console.log("VALUE FROM COMPARE: ", match);
                     if (match == true) {
-                        req.session.userID = dbFeedback.rows[0].id;
+                        req.session.userId = dbFeedback.rows[0].id;
                         //console.log("USER ID", req.session.userId);
                         res.json(req.session.userId);
                     } else {
@@ -117,12 +119,12 @@ app.post("/login", (req, res) => {
 
 app.get("/user", async (req, res) => {
     //console.log("REQ BODY", req.body); //GET REQUESTS NEVER HAVE A BODY!
-    //console.log("COOKIE ID: ", req.session);
+    console.log("COOKIE ID: ", req.session);
     try {
         const {
             rows: [user],
         } = await db.getUserDataById(req.session.userId);
-        console.log("DATA:", user); //nested desrtucturing, the first item of rows will be named user
+        console.log("DATA in /user:", user); //nested desrtucturing, the first item of rows will be named user
         res.json(user);
     } catch (err) {
         console.log("err in GET /user", err.message);
@@ -254,7 +256,7 @@ app.get("/api/users/:inputVal?", async (req, res) => {
 
 app.get("/get-friends", async (req, res) => {
     let userId = req.session.userId;
-    console.log("LOG REQ SESSION: ", userId);
+    // console.log("LOG REQ SESSION: ", userId);
 
     try {
         const { rows } = await db.getFriends(userId);
@@ -273,9 +275,9 @@ app.get("/get-friends", async (req, res) => {
 /// FRIEND STATUS  ///
 //////////////////////
 
-app.get("/friendstatus/:userId/:otherId", async (req, res) => {
-    let { userId, otherId } = req.params;
-    console.log("LOG REQ PARAMS: ", userId);
+app.get("/friendstatus/:otherId", async (req, res) => {
+    let { otherId } = req.params;
+    let userId = req.session.userId;
     console.log("LOG REQ PARAMS: ", otherId);
 
     try {
@@ -299,9 +301,9 @@ app.get("/friendstatus/:userId/:otherId", async (req, res) => {
     }
 });
 
-app.post("/friendstatus/:userId/:otherId", async (req, res) => {
-    let { userId, otherId } = req.params;
-    // console.log("LOG REQ PARAMS: ", userId);
+app.post("/friendstatus/:otherId", async (req, res) => {
+    let { otherId } = req.params;
+    let userId = req.session.userId;
     // console.log("LOG REQ PARAMS: ", otherId);
     console.log("REQ BODY POST friendstatus: ", req.body.text);
     let text = req.body.text;
@@ -386,6 +388,11 @@ app.post("/password/reset/verify", async (req, res) => {
             });
         }
     }
+});
+
+app.get("/logout", requireLoggedInUser, (req, res) => {
+    req.session = null;
+    res.redirect("/welcome");
 });
 
 app.get("*", function (req, res) {
