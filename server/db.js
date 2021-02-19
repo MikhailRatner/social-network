@@ -68,6 +68,31 @@ module.exports.getFindPeople = (inputVal) => {
     );
 };
 
+module.exports.getFriends = (userId) => {
+    const q = `SELECT users.id, first, last, profile_pic_url, accepted
+    FROM friendships
+    JOIN users
+    ON (accepted = false AND recipient_id = $1 AND sender_id = users.id)
+    OR (accepted = true AND recipient_id = $1 AND sender_id = users.id)
+    OR (accepted = true AND sender_id = $1 AND recipient_id = users.id)`;
+    const params = [userId];
+    return db.query(q, params);
+};
+/* getFriends
+    -- this will return users that you're friends with and users who have sent YOU a friend request. 
+    -- Users that you've sent a friend request to will NOT show up in this query.
+*/
+
+/* module.exports.upsertFriendStatus = (userId, otherId, status) => {
+    const q = `INSERT INTO friendships (sender_id, recipient_id, accepted)
+    VALUES ($1,$2,$3)
+    ON CONFLICT WHERE (recipient_id = $1 AND sender_id = $2)
+    OR (recipient_id = $2 AND sender_id = $1)
+    DO UPDATE SET sender_id = $1, recipient_id = $2, accepted = $3`;
+    const params = [userId, otherId, status];
+    return db.query(q, params);
+}; */
+
 module.exports.checkFriendStatus = (userId, otherId) => {
     const q = `SELECT * FROM friendships
     WHERE (recipient_id = $1 AND sender_id = $2)
@@ -76,18 +101,24 @@ module.exports.checkFriendStatus = (userId, otherId) => {
     return db.query(q, params);
 };
 
-module.exports.upsertFriendStatus = (userId, otherId, status) => {
-    const q = `INSERT INTO friendships (sender_id, recipient_id, accepted)
-    VALUES ($1,$2,$3)
-    ON CONFLICT WHERE (recipient_id = $1 AND sender_id = $2)
-    OR (recipient_id = $2 AND sender_id = $1)
-    DO UPDATE SET sender_id = $1, recipient_id = $2, accepted = $3`;
-    const params = [userId, otherId, status];
+module.exports.addFriendRequest = (userId, otherId) => {
+    const q = `INSERT INTO friendships (sender_id, recipient_id)
+    VALUES ($1, $2)`;
+    const params = [userId, otherId];
+    return db.query(q, params);
+};
+
+module.exports.acceptFriendRequest = (userId, otherId) => {
+    const q = `UPDATE friendships
+    SET accepted = true
+    WHERE (recipient_id = $1 AND sender_id = $2)
+    OR (recipient_id = $2 AND sender_id = $1)`;
+    const params = [userId, otherId];
     return db.query(q, params);
 };
 
 module.exports.deleteFriendStatus = (userId, otherId) => {
-    const q = `DELETE * FROM friendships
+    const q = `DELETE FROM friendships
     WHERE (recipient_id = $1 AND sender_id = $2)
     OR (recipient_id = $2 AND sender_id = $1)`;
     const params = [userId, otherId];

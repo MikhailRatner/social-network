@@ -27,8 +27,8 @@ export default function FriendshipButton(props) {
     useEffect(() => {
         let abort = false;
         // then this stuff runs SECOND
-        console.log("PROPS USER ID: ", props.userId);
-        console.log("PROPS OTHER ID: ", props.otherId);
+        // console.log("PROPS USER ID: ", props.userId);
+        // console.log("PROPS OTHER ID: ", props.otherId);
 
         if (!userId) {
             return; //this stop useEffect running in case the userId is still undefined. When the userId get assigned a value, useEffect runs again (due to dependecie within the array after useEffect) and skip this condition
@@ -89,3 +89,13 @@ export default function FriendshipButton(props) {
         </>
     );
 }
+
+/* TRIED TO ADD A BUTTON FOR REJECTING A FRIEND REQUEST, BUT THE CONDITIONS ARE A BIT COMPLICATED. MIGHT TRY LATER AGAIN
+
+{
+    buttonText == "Accept Friend Request" && (
+        <button onClick={() => handleSubmit()} className="friendshipButton">
+            Reject Friend Request
+        </button>
+    );
+} */

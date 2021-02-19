@@ -249,6 +249,27 @@ app.get("/api/users/:inputVal?", async (req, res) => {
 });
 
 //////////////////////
+////// FRIENDS  //////
+//////////////////////
+
+app.get("/friends/:userId", async (req, res) => {
+    let { userId } = req.params;
+    console.log("LOG REQ PARAMS: ", userId);
+
+    try {
+        const { rows } = await db.getFriends(userId);
+        console.log("DATA in getFriends:", rows);
+        res.json(rows);
+    } catch (err) {
+        console.log("err in GET /friends", err.message);
+        console.log(err.code);
+        res.json({
+            error: err.code,
+        });
+    }
+});
+
+//////////////////////
 /// FRIEND STATUS  ///
 //////////////////////
 
@@ -259,12 +280,12 @@ app.get("/friendstatus/:userId/:otherId", async (req, res) => {
 
     try {
         const { rows } = await db.checkFriendStatus(userId, otherId);
-        console.log("DATA in friendstatus:", rows); //nested desrtucturing, the first item of rows will be named user
-        if (rows.length == 0) {
+        console.log("DATA in friendstatus:", rows);
+        if (!rows.length) {
             res.json("Send Friend Request"); //there is no array, no friendship -> render "make friend request" button
         } else if (rows[0].accepted) {
-            res.json("Unfriend");
-        } else if (rows[0].recipient_id == userId) {
+            res.json("End Friendship");
+        } else if (rows[0].sender_id == userId) {
             res.json("Cancel Friend Request");
         } else {
             res.json("Accept Friend Request");
@@ -286,23 +307,15 @@ app.post("/friendstatus/:userId/:otherId", async (req, res) => {
     let text = req.body.text;
 
     if (text == "Send Friend Request") {
-        const { rows } = await db.upsertFriendStatus(userId, otherId, "sent");
+        const { rows } = await db.addFriendRequest(userId, otherId);
         console.log("ROWS", rows);
         res.json("Cancel Friend Request");
     } else if (text == "Cancel Friend Request") {
-        const { rows } = await db.upsertFriendStatus(
-            userId,
-            otherId,
-            "canceled"
-        );
+        const { rows } = await db.deleteFriendStatus(userId, otherId);
         console.log("ROWS", rows);
         res.json("Send Friend Request");
     } else if (text == "Accept Friend Request") {
-        const { rows } = await db.upsertFriendStatus(
-            userId,
-            otherId,
-            "accepted"
-        );
+        const { rows } = await db.acceptFriendRequest(userId, otherId);
         console.log("ROWS", rows);
         res.json("End Friendship");
     } else if (text == "End Friendship") {
@@ -310,7 +323,7 @@ app.post("/friendstatus/:userId/:otherId", async (req, res) => {
         console.log("ROWS", rows);
         res.json("Send Friend Request");
     } else {
-        console.log("BUTTON TEXT DOES NOT CORRESPOND THE CONDITIONS");
+        console.log("BUTTON TEXT DOES NOT CORRESPOND WITH CONDITIONS");
         res.json({
             error: true,
         });
