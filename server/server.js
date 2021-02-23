@@ -1,4 +1,5 @@
 const express = require("express");
+const app = express();
 const compression = require("compression");
 const path = require("path");
 const { sendEmail } = require("./ses");
@@ -12,17 +13,23 @@ const { s3Url } = require("./config.json");
 const { uploader } = require("./upload");
 
 const { requireLoggedOutUser, requireLoggedInUser } = require("./middleware");
+const server = require("http").Server(app);
+const io = require("socket.io")(server, {
+    allowRequest: (req, callback) =>
+        callback(null, req.headers.referer.startsWith("http://localhost:3000")),
+});
 
-const app = express();
 app.use(compression());
 app.use(express.static(path.join(__dirname, "..", "client", "public")));
 
-app.use(
-    cookieSession({
-        secret: `I'm not a hacker.`,
-        maxAge: 1000 * 60 * 60 * 24 * 356,
-    })
-);
+const cookieSessionMiddleware = cookieSession({
+    secret: `I'm not a hacker.`,
+    maxAge: 1000 * 60 * 60 * 24 * 356,
+});
+app.use(cookieSessionMiddleware);
+io.use(function (socket, next) {
+    cookieSessionMiddleware(socket.request, socket.request.res, next);
+});
 
 app.use(csurf());
 app.use(function (req, res, next) {
@@ -119,12 +126,12 @@ app.post("/login", (req, res) => {
 
 app.get("/user", async (req, res) => {
     //console.log("REQ BODY", req.body); //GET REQUESTS NEVER HAVE A BODY!
-    console.log("COOKIE ID: ", req.session);
+    //console.log("COOKIE ID: ", req.session);
     try {
         const {
             rows: [user],
         } = await db.getUserDataById(req.session.userId);
-        console.log("DATA in /user:", user); //nested desrtucturing, the first item of rows will be named user
+        //console.log("DATA in /user:", user); //nested desrtucturing, the first item of rows will be named user
         res.json(user);
     } catch (err) {
         console.log("err in GET /user", err.message);
@@ -144,20 +151,20 @@ app.post(
     uploader.single("file"),
     s3.upload,
     async (req, res) => {
-        console.log("you've made it inside /profile-pic!");
+        //console.log("you've made it inside /profile-pic!");
         //console.log("REQ BODY", req.body);
         //console.log("COOKIE ID: ", req.session.userId);
         if (req.file) {
-            console.log("THERE IS A FILE!");
+            //console.log("THERE IS A FILE!");
             let fullUrl = s3Url + req.file.filename;
-            console.log("Full URL", fullUrl);
+            //console.log("Full URL", fullUrl);
 
             try {
                 const { rows } = await db.updateImgById(
                     req.session.userId,
                     fullUrl
                 );
-                console.log("ROWS: ", rows);
+                //console.log("ROWS: ", rows);
                 //console.log("DATA:", user); //nested desrtucturing, the first item of rows will be named user
                 res.json(rows[0].profile_pic_url);
             } catch (err) {
@@ -202,13 +209,13 @@ app.post("/update-bio", async (req, res) => {
 
 app.get("/api/user/:id", async (req, res) => {
     let { id } = req.params;
-    console.log("LOG REQ PARAMS: ", id);
+    //console.log("LOG REQ PARAMS: ", id);
 
     try {
         const {
             rows: [user],
         } = await db.getUserDataById(id);
-        console.log("DATA:", user); //nested desrtucturing, the first item of rows will be named user
+        //console.log("DATA:", user); //nested desrtucturing, the first item of rows will be named user
         if (id != req.session.userId) {
             res.json(user);
         } else {
@@ -229,16 +236,16 @@ app.get("/api/user/:id", async (req, res) => {
 
 app.get("/api/users/:inputVal?", async (req, res) => {
     let { inputVal } = req.params;
-    console.log("LOG REQ PARAMS GET /users/:find: ", inputVal);
+    //console.log("LOG REQ PARAMS GET /users/:find: ", inputVal);
 
     try {
         if (!inputVal) {
             const { rows } = await db.getRecentProfiles();
-            console.log("DATA RECENT PROFILES:", rows); //nested desrtucturing, the first item of rows will be named user
+            //console.log("DATA RECENT PROFILES:", rows); //nested desrtucturing, the first item of rows will be named user
             res.json(rows);
         } else {
             const { rows } = await db.getFindPeople(inputVal);
-            console.log("DATA FIND PEOPLE:", rows); //nested desrtucturing, the first item of rows will be named user
+            //console.log("DATA FIND PEOPLE:", rows); //nested desrtucturing, the first item of rows will be named user
             res.json(rows);
         }
     } catch (err) {
@@ -260,7 +267,7 @@ app.get("/get-friends", async (req, res) => {
 
     try {
         const { rows } = await db.getFriends(userId);
-        console.log("DATA in getFriends:", rows);
+        //console.log("DATA in getFriends:", rows);
         res.json(rows);
     } catch (err) {
         console.log("err in GET /friends", err.message);
@@ -278,11 +285,11 @@ app.get("/get-friends", async (req, res) => {
 app.get("/friendstatus/:otherId", async (req, res) => {
     let { otherId } = req.params;
     let userId = req.session.userId;
-    console.log("LOG REQ PARAMS: ", otherId);
+    //console.log("LOG REQ PARAMS: ", otherId);
 
     try {
         const { rows } = await db.checkFriendStatus(userId, otherId);
-        console.log("DATA in friendstatus:", rows);
+        //console.log("DATA in friendstatus:", rows);
         if (!rows.length) {
             res.json("Send Friend Request"); //there is no array, no friendship -> render "make friend request" button
         } else if (rows[0].accepted) {
@@ -305,24 +312,20 @@ app.post("/friendstatus/:otherId", async (req, res) => {
     let { otherId } = req.params;
     let userId = req.session.userId;
     // console.log("LOG REQ PARAMS: ", otherId);
-    console.log("REQ BODY POST friendstatus: ", req.body.text);
+    //console.log("REQ BODY POST friendstatus: ", req.body.text);
     let text = req.body.text;
 
     if (text == "Send Friend Request") {
-        const { rows } = await db.addFriendRequest(userId, otherId);
-        console.log("ROWS", rows);
+        await db.addFriendRequest(userId, otherId);
         res.json("Cancel Friend Request");
     } else if (text == "Cancel Friend Request") {
-        const { rows } = await db.deleteFriendStatus(userId, otherId);
-        console.log("ROWS", rows);
+        await db.deleteFriendStatus(userId, otherId);
         res.json("Send Friend Request");
     } else if (text == "Accept Friend Request") {
-        const { rows } = await db.acceptFriendRequest(userId, otherId);
-        console.log("ROWS", rows);
+        await db.acceptFriendRequest(userId, otherId);
         res.json("End Friendship");
     } else if (text == "End Friendship") {
-        const { rows } = await db.deleteFriendStatus(userId, otherId);
-        console.log("ROWS", rows);
+        await db.deleteFriendStatus(userId, otherId);
         res.json("Send Friend Request");
     } else {
         console.log("BUTTON TEXT DOES NOT CORRESPOND WITH CONDITIONS");
@@ -399,8 +402,56 @@ app.get("*", function (req, res) {
     res.sendFile(path.join(__dirname, "..", "client", "index.html"));
 });
 
-app.listen(process.env.PORT || 3001, function () {
+server.listen(process.env.PORT || 3001, function () {
     console.log("I'm listening.");
+});
+
+io.on("connection", (socket) => {
+    if (!socket.request.session.userId) {
+        return socket.disconnect(true);
+    }
+    const userId = socket.request.session.userId;
+
+    console.log(`Socket with id: ${socket.id} has connected!`);
+    console.log(`userId in this socket is ${userId}`);
+
+    // sends a message to its own socket
+    socket.emit("hello", {
+        cohort: "Adobo",
+    });
+
+    // sends a message to ALL connected users
+    io.emit("hello", {
+        cohort: "Adobo",
+    });
+
+    // sends a message to all sockets EXCEPT your own
+    socket.broadcast.emit("hello", {
+        cohort: "Adobo",
+    });
+
+    // sends a message to a specific socket (think private messaging)
+    io.sockets.sockets.get(socket.id).emit("hello", {
+        cohort: "Adobo",
+    });
+
+    // sends a message to every socket except 1
+    io.sockets.sockets.get(socket.id).broadcast.emit("hello", {
+        cohort: "Adobo",
+    });
+
+    // we use 'on' to listen for incoming events / messages
+    socket.on("another cool message", (data) => {
+        console.log(data);
+    });
+
+    socket.on("helloWorld clicked", (data) => {
+        console.log(data);
+    });
+
+    socket.on("disconnect", () => {
+        console.log(`Socket with id: ${socket.id} just DISCONNECTED!!!!`);
+    });
 });
 
 /* app.post("/registration", (req, res) => {
