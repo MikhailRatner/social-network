@@ -406,7 +406,7 @@ server.listen(process.env.PORT || 3001, function () {
     console.log("I'm listening.");
 });
 
-io.on("connection", (socket) => {
+io.on("connection", async (socket) => {
     if (!socket.request.session.userId) {
         return socket.disconnect(true);
     }
@@ -415,7 +415,28 @@ io.on("connection", (socket) => {
     console.log(`Socket with id: ${socket.id} has connected!`);
     console.log(`userId in this socket is ${userId}`);
 
-    // sends a message to its own socket
+    try {
+        const { rows } = await db.getMessages();
+        //console.log("10 LAST MESSAGES FROM DB:", rows);
+        socket.emit("chatMessages", rows.reverse());
+    } catch (err) {
+        console.log("Error in getMessages:", err);
+    }
+
+    // we use 'on' to listen for incoming events / messages
+    socket.on("sendMessage", async (data) => {
+        try {
+            //console.log("DATA in chatMessage socket", data);
+            await db.postMessage(userId, data);
+            const { rows } = await db.getMessages();
+            //console.log("10 LAST MESSAGES FROM DB:", rows);
+            io.emit("chatMessages", rows.reverse());
+        } catch (err) {
+            console.log("Error in getMessages:", err);
+        }
+    });
+
+    /*   // sends a message to its own socket
     socket.emit("hello", {
         cohort: "Adobo",
     });
@@ -447,7 +468,7 @@ io.on("connection", (socket) => {
 
     socket.on("helloWorld clicked", (data) => {
         console.log(data);
-    });
+    }); */
 
     socket.on("disconnect", () => {
         console.log(`Socket with id: ${socket.id} just DISCONNECTED!!!!`);

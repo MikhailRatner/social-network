@@ -8,6 +8,8 @@ import { BrowserRouter, Route } from "react-router-dom";
 import OtherProfile from "./OtherProfile";
 import FindPeople from "./FindPeople";
 import Friends from "./Friends";
+import Chat from "./Chat";
+import Button from "react-bootstrap/Button";
 
 export default class App extends Component {
     constructor(props) {
@@ -85,6 +87,7 @@ export default class App extends Component {
                                 }
                             />
                         )}
+                        <Button variant="primary">BOOTSRAP</Button>
                     </div>
 
                     <div>
@@ -127,6 +130,16 @@ export default class App extends Component {
                             path="/users"
                             render={(props) => (
                                 <FindPeople
+                                    key={props.match.url}
+                                    match={props.match}
+                                    history={props.history}
+                                />
+                            )}
+                        />
+                        <Route
+                            path="/chat"
+                            render={(props) => (
+                                <Chat
                                     key={props.match.url}
                                     match={props.match}
                                     history={props.history}

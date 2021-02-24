@@ -125,6 +125,22 @@ module.exports.deleteFriendStatus = (userId, otherId) => {
     return db.query(q, params);
 };
 
+module.exports.getMessages = () => {
+    const q = `SELECT * FROM messages
+    JOIN users
+    ON user_id = users.id
+    ORDER BY TIMESTAMP DESC
+    LIMIT 10`;
+    return db.query(q);
+};
+
+module.exports.postMessage = (userId, message) => {
+    const q = `INSERT INTO messages (user_id, message)
+    VALUES ($1, $2)`;
+    const params = [userId, message];
+    return db.query(q, params);
+};
+
 module.exports.addResetCode = (email, code) => {
     const q = `INSERT INTO reset_codes (email, code)
     VALUES ($1,$2)`;

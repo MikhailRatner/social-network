@@ -44,3 +44,25 @@ export async function endFriendship(otherId) {
         payload: data,
     };
 }
+
+export async function chatMessages(msgs) {
+    console.log("INSIDE chatMessages: ", msgs);
+    //we can OPTIONALLY "talk" to the server here...
+    //NOT NEEDED HERE!!!
+    //we always return an object that is our action
+    return {
+        type: "GET_MESSAGES",
+        payload: msgs,
+    };
+}
+
+export async function chatMessage(msg) {
+    console.log("INSIDE chatMessage: ", msg);
+    //we can OPTIONALLY "talk" to the server here...
+    //NOT NEEDED HERE!!!
+    //we always return an object that is our action
+    return {
+        type: "POST_MESSAGE",
+        payload: msg,
+    };
+}

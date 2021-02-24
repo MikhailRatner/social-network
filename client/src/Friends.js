@@ -13,14 +13,12 @@ export default function Friends() {
     const wannabeFriends = useSelector(
         (state) =>
             state.allFriends &&
-            state.allFriends.filter(
-                (allFriends) => allFriends.accepted == false
-            )
+            state.allFriends.filter((allFriends) => !allFriends.accepted)
     );
     const currentFriends = useSelector(
         (state) =>
             state.allFriends &&
-            state.allFriends.filter((allFriends) => allFriends.accepted == true)
+            state.allFriends.filter((allFriends) => allFriends.accepted)
     );
 
     // console.log("wannabeFriends 1", wannabeFriends);

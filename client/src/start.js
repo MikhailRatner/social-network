@@ -1,12 +1,12 @@
 import ReactDOM from "react-dom";
+import "bootstrap/dist/css/bootstrap.min.css";
 
 import { createStore, applyMiddleware } from "redux";
 import { Provider } from "react-redux";
 import reduxPromise from "redux-promise";
 import { composeWithDevTools } from "redux-devtools-extension";
 import { reducer } from "./reducer";
-import { io } from "socket.io-client";
-const socket = io.connect();
+import { initSocket } from "./socket.js";
 
 import Welcome from "./Welcome";
 import App from "./App";
@@ -35,11 +35,13 @@ let elem;
 if (location.pathname === "/welcome") {
     elem = <Welcome />;
 } else {
-    elem = (
-        <Provider store={store}>
-            <App />
-        </Provider>
-    );
+    elem =
+        (initSocket(store),
+        (
+            <Provider store={store}>
+                <App />
+            </Provider>
+        ));
 }
 
 ReactDOM.render(elem, document.querySelector("main"));
