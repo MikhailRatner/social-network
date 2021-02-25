@@ -1,19 +1,60 @@
+* {
+    margin: 0;
+    box-sizing: border-box;
+}
+
 body {
     background-color: rgb(168, 168, 230);
+}
+
+.mainComponentDiv {
+    background-color: ghostwhite;
+    min-height: 100vh;
+    padding-top: 75px;
 }
 
 .header {
     border: 3px rgb(152, 135, 227) solid;
     display: flex;
     justify-content: space-between;
+    align-items: center;
+    position: fixed;
+    top: 0;
+    width: 100%;
+    background-color: rgb(168, 168, 230);
+    height: 65px;
+}
+
+.header,
+.mainComponentDiv {
+    padding-left: 30px;
+    padding-right: 30px;
+}
+
+.oneChatMessage {
+    margin-bottom: 3px;
+}
+
+.oneChatMessage > p:nth-child(2) {
+    margin: 0 5px;
+}
+
+.profile-pic > img {
+    object-fit: cover;
+    width: 45px;
+    height: 45px;
+    border-radius: 50%;
 }
 
 .logoImg {
-    border: 3px rgb(159, 97, 97) solid;
+    width: 45px;
+    height: 45px;
 }
 
-.profile-pic {
-    border: 3px rgb(230, 230, 164) solid;
+.myProfileInfo > .profile-pic > img {
+    border-radius: 0;
+    width: 120px;
+    height: 120px;
 }
 
 .uploader {
@@ -23,7 +64,8 @@ body {
 .profile {
     border: 3px gold solid;
     display: flex;
-    justify-content: left;
+    justify-content: space-between;
+    align-items: center;
 }
 
 .profile img {
@@ -31,16 +73,24 @@ body {
     /* image within the profile component is bigger than the one in the header */
 }
 
+.otherProfile,
+.chatDiv {
+    background-color: rgb(255, 255, 255);
+    border: 1px rgb(189, 182, 182) solid;
+    border-radius: 5px;
+    box-shadow: 3px 3px 15px rgba(0, 0, 0, 0.303);
+    padding: 5px;
+    transition: 0.1s ease;
+}
+
 .otherProfile {
-    border: 3px purple solid;
     display: flex;
     justify-content: space-between;
     align-items: center;
 }
 
-.otherProfile img {
-    width: 120px;
-    /* image within the profile component is bigger than the one in the header */
+.otherProfile:hover {
+    box-shadow: 3px 3px 1px rgba(0, 0, 0, 0.303);
 }
 
 .otherProfileImgAndText {
@@ -49,8 +99,14 @@ body {
     align-items: center;
 }
 
+.otherProfileImgAndText > .profile-pic > img {
+    border-radius: 0;
+    width: 155px;
+    height: 155px;
+}
+
 .otherProfileBio {
-    width: 80%;
+    width: 70%;
 }
 
 .oneChatMessage {
@@ -60,5 +116,43 @@ body {
 
 #chat-messages {
     overflow: scroll;
-    height: 100%;
+    height: 50vh;
+}
+
+.registrationComponent {
+    display: flex;
+    justify-content: center;
+    text-align: center;
+}
+
+input {
+    border-radius: 10px;
+    margin: 5px;
+    padding: 3px;
+    width: 145px;
+}
+
+button {
+    border-radius: 10px;
+    margin: 5px;
+    padding: 3px;
+    width: 145px;
+    transition: 0.5s ease;
+}
+
+button:hover {
+    font-weight: bold;
+    color: white;
+    background-color: black;
+}
+
+a {
+    text-decoration: none;
+    color: white;
+    transition: 0.5s ease;
+}
+
+a:hover {
+    font-weight: bold;
+    color: black;
 }

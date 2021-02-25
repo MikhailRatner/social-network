@@ -9,7 +9,7 @@ import OtherProfile from "./OtherProfile";
 import FindPeople from "./FindPeople";
 import Friends from "./Friends";
 import Chat from "./Chat";
-import Button from "react-bootstrap/Button";
+//import Button from "react-bootstrap/Button";
 
 export default class App extends Component {
     constructor(props) {
@@ -87,10 +87,9 @@ export default class App extends Component {
                                 }
                             />
                         )}
-                        <Button variant="primary">BOOTSRAP</Button>
                     </div>
 
-                    <div>
+                    <div className="mainComponentDiv">
                         <Route
                             exact
                             path="/"

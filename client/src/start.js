@@ -1,5 +1,5 @@
 import ReactDOM from "react-dom";
-import "bootstrap/dist/css/bootstrap.min.css";
+//import "./bootstrap/dist/css/bootstrap.min.css";
 
 import { createStore, applyMiddleware } from "redux";
 import { Provider } from "react-redux";

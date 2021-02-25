@@ -6,17 +6,18 @@ export default function Profile(props) {
 
     return (
         <div className="profile">
-            <ProfilePic
-                // Passing down props:
-                firstName={props.firstName}
-                lastName={props.lastName}
-                profilePicUrl={props.profilePicUrl}
-                bio={props.bio}
-            />
-            <p>
-                Hey, my name is {props.firstName} {props.lastName} and I am new
-                at this cool social media network!
-            </p>
+            <div className="myProfileInfo">
+                <ProfilePic
+                    // Passing down props:
+                    firstName={props.firstName}
+                    lastName={props.lastName}
+                    profilePicUrl={props.profilePicUrl}
+                    bio={props.bio}
+                />
+                <p>
+                    {props.firstName} {props.lastName}
+                </p>
+            </div>
             <BioEditor bio={props.bio} />
         </div>
     );

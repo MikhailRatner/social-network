@@ -1,12 +1,10 @@
 import { useEffect, useState, useRef } from "react";
 import { useSelector } from "react-redux";
 import { socket } from "./socket";
-//import { chatMessages, chatMessage } from "./actions";
 
 export default function Chat() {
     //console.log("PROPS INSIDE Chat component", props);
 
-    //const dispatch = useDispatch();
     const chat = useSelector((state) => state.lastMessages);
     const [inputValue, setInputValue] = useState("");
     const elemRef = useRef();
@@ -19,7 +17,6 @@ export default function Chat() {
     useEffect(() => {
         if (chat) {
             console.log("CHAT in useEffect: ", chat);
-            //dispatch(chatMessages());
             elemRef.current.scrollTop =
                 elemRef.current.scrollHeight - elemRef.current.clientHeight;
         }
@@ -38,7 +35,7 @@ export default function Chat() {
     };
 
     return (
-        <div className="friends">
+        <div className="chatDiv">
             <h2>Last Ten Group Messages</h2>
             <div id="chat-messages" ref={elemRef}>
                 {chat &&
@@ -49,16 +46,15 @@ export default function Chat() {
                                     width="20px"
                                     src={elem.profile_pic_url}
                                     alt={`${elem.first} ${elem.last}`}
-                                    styles={{ paddingLeft: "10px" }}
                                 />
 
-                                <p styles={{ paddingLeft: "10px" }}>
-                                    {elem.first} {elem.last}
+                                <p>
+                                    <strong>
+                                        {elem.first} {elem.last}
+                                    </strong>
                                 </p>
 
-                                <p styles={{ paddingLeft: "10px" }}>
-                                    {elem.message}
-                                </p>
+                                <p>{elem.message}</p>
                             </div>
                         );
                     })}
@@ -72,11 +68,7 @@ export default function Chat() {
                 rows="10"
                 placeholder="Type a message..."
             ></textarea>
-            <button
-                disabled={!inputValue}
-                //onClick={() => dispatch(chatMessage(inputValue))}
-                onClick={(e) => sendMessage(e)}
-            >
+            <button disabled={!inputValue} onClick={(e) => sendMessage(e)}>
                 SEND MESSAGE
             </button>
         </div>

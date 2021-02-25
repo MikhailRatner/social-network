@@ -50,10 +50,15 @@ export async function chatMessages(msgs) {
     //we can OPTIONALLY "talk" to the server here...
     //NOT NEEDED HERE!!!
     //we always return an object that is our action
-    return {
-        type: "GET_MESSAGES",
-        payload: msgs,
-    };
+
+    try {
+        return {
+            type: "GET_MESSAGES",
+            payload: msgs,
+        };
+    } catch (err) {
+        console.log("ERR in chatMessages: ", err);
+    }
 }
 
 export async function chatMessage(msg) {
@@ -61,8 +66,13 @@ export async function chatMessage(msg) {
     //we can OPTIONALLY "talk" to the server here...
     //NOT NEEDED HERE!!!
     //we always return an object that is our action
-    return {
-        type: "POST_MESSAGE",
-        payload: msg,
-    };
+
+    try {
+        return {
+            type: "GET_MESSAGE",
+            payload: msg,
+        };
+    } catch (err) {
+        console.log("ERR in chatMessage: ", err);
+    }
 }
