@@ -7,7 +7,7 @@ export default function Login() {
     const [error, handleSubmit] = useAuthSubmit("/login", values);
 
     return (
-        <div>
+        <div className="loginComponent">
             {/* this is the syntax for conditions, IF left is true, then the thing after && is executed */}
             {error && <p>{error}</p>}
             <h1>Login</h1>

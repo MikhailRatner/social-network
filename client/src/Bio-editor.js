@@ -98,7 +98,7 @@ export default class BioEditor extends Component {
 
     render() {
         return (
-            <div>
+            <div className="bioEditor">
                 {this.state.error && <p>{this.state.error}</p>}
 
                 {/* call the method */}

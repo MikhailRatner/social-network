@@ -48,7 +48,7 @@ app.use(express.json());
 ////// WELCOME ///////
 //////////////////////
 
-app.get("/welcome", (req, res) => {
+app.get("/welcome", requireLoggedOutUser, (req, res) => {
     // if you don't have the cookie-session middelware this code will NOT work!
     if (req.session.userId) {
         // if the user is logged in... redirect away from /welcome
@@ -65,7 +65,7 @@ app.get("/welcome", (req, res) => {
 //// REGISTRATION ////
 //////////////////////
 
-app.post("/registration", async (req, res) => {
+app.post("/registration", requireLoggedOutUser, async (req, res) => {
     //console.log("REQ BODY INPUT:", req.body.password);
 
     try {
@@ -92,7 +92,7 @@ app.post("/registration", async (req, res) => {
 /////// LOGIN ////////
 //////////////////////
 
-app.post("/login", (req, res) => {
+app.post("/login", requireLoggedOutUser, (req, res) => {
     //onsole.log("INPUT, REQ BODY : ", req.body);
     db.getUserDataByMail(req.body.email)
         .then((dbFeedback) => {
@@ -124,7 +124,7 @@ app.post("/login", (req, res) => {
 /////// USER  ////////
 //////////////////////
 
-app.get("/user", async (req, res) => {
+app.get("/user", requireLoggedInUser, async (req, res) => {
     //console.log("REQ BODY", req.body); //GET REQUESTS NEVER HAVE A BODY!
     //console.log("COOKIE ID: ", req.session);
     try {
@@ -207,7 +207,7 @@ app.post("/update-bio", async (req, res) => {
 /// OTHER PROFILE  ///
 //////////////////////
 
-app.get("/api/user/:id", async (req, res) => {
+app.get("/api/user/:id", requireLoggedInUser, async (req, res) => {
     let { id } = req.params;
     //console.log("LOG REQ PARAMS: ", id);
 
@@ -261,7 +261,7 @@ app.get("/api/users/:inputVal?", async (req, res) => {
 ////// FRIENDS  //////
 //////////////////////
 
-app.get("/get-friends", async (req, res) => {
+app.get("/get-friends", requireLoggedInUser, async (req, res) => {
     let userId = req.session.userId;
     // console.log("LOG REQ SESSION: ", userId);
 
@@ -282,7 +282,7 @@ app.get("/get-friends", async (req, res) => {
 /// FRIEND STATUS  ///
 //////////////////////
 
-app.get("/friendstatus/:otherId", async (req, res) => {
+app.get("/friendstatus/:otherId", requireLoggedInUser, async (req, res) => {
     let { otherId } = req.params;
     let userId = req.session.userId;
     //console.log("LOG REQ PARAMS: ", otherId);
@@ -417,7 +417,7 @@ io.on("connection", async (socket) => {
 
     try {
         const { rows } = await db.getMessages();
-        //console.log("10 LAST MESSAGES FROM DB:", rows);
+        console.log("10 LAST MESSAGES FROM DB:", rows);
         socket.emit("chatMessages", rows.reverse());
     } catch (err) {
         console.log("Error in getMessages:", err);

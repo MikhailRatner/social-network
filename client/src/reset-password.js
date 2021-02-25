@@ -86,6 +86,7 @@ export default class ResetPassword extends Component {
                         />
                     </form>
                     <button onClick={() => this.sendCode()}>submit</button>
+                    <br />
                     <Link to="/registration">Register </Link>
                     <Link to="/login">or Login</Link>
                 </div>
@@ -113,6 +114,7 @@ export default class ResetPassword extends Component {
                 <div>
                     <h1>success</h1>
                     <p>You can now log in with your new password!</p>
+                    <br />
                     <Link to="/login">Click here to login</Link>
                 </div>
             );
@@ -121,7 +123,7 @@ export default class ResetPassword extends Component {
 
     render() {
         return (
-            <div>
+            <div className="resetPasswordComponent">
                 <h1>Reset Password</h1>
                 {this.state.error && <p>{this.state.error}</p>}
 

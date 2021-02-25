@@ -7,6 +7,16 @@ body {
     background-color: rgb(168, 168, 230);
 }
 
+.loginComponent,
+.registrationComponent,
+.resetPasswordComponent {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+}
+
 .mainComponentDiv {
     background-color: ghostwhite;
     min-height: 100vh;
@@ -29,14 +39,6 @@ body {
 .mainComponentDiv {
     padding-left: 30px;
     padding-right: 30px;
-}
-
-.oneChatMessage {
-    margin-bottom: 3px;
-}
-
-.oneChatMessage > p:nth-child(2) {
-    margin: 0 5px;
 }
 
 .profile-pic > img {
@@ -62,7 +64,6 @@ body {
 }
 
 .profile {
-    border: 3px gold solid;
     display: flex;
     justify-content: space-between;
     align-items: center;
@@ -74,7 +75,8 @@ body {
 }
 
 .otherProfile,
-.chatDiv {
+.chatDiv,
+.profile {
     background-color: rgb(255, 255, 255);
     border: 1px rgb(189, 182, 182) solid;
     border-radius: 5px;
@@ -93,7 +95,8 @@ body {
     box-shadow: 3px 3px 1px rgba(0, 0, 0, 0.303);
 }
 
-.otherProfileImgAndText {
+.otherProfileImgAndText,
+.bioEditor {
     display: flex;
     flex-direction: column;
     align-items: center;
@@ -119,10 +122,12 @@ body {
     height: 50vh;
 }
 
-.registrationComponent {
-    display: flex;
-    justify-content: center;
-    text-align: center;
+.oneChatMessage {
+    margin-bottom: 3px;
+}
+
+.oneChatMessage > p:nth-child(2) {
+    margin: 0 5px;
 }
 
 input {

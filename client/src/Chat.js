@@ -1,6 +1,7 @@
 import { useEffect, useState, useRef } from "react";
 import { useSelector } from "react-redux";
 import { socket } from "./socket";
+import { moment } from "moment";
 
 export default function Chat() {
     //console.log("PROPS INSIDE Chat component", props);
@@ -16,7 +17,7 @@ export default function Chat() {
 
     useEffect(() => {
         if (chat) {
-            console.log("CHAT in useEffect: ", chat);
+            //console.log("CHAT in useEffect: ", chat);
             elemRef.current.scrollTop =
                 elemRef.current.scrollHeight - elemRef.current.clientHeight;
         }
@@ -50,11 +51,11 @@ export default function Chat() {
 
                                 <p>
                                     <strong>
-                                        {elem.first} {elem.last}
+                                        {elem.first} {elem.last}:
                                     </strong>
                                 </p>
-
                                 <p>{elem.message}</p>
+                                <p>{elem.timestamp}</p>
                             </div>
                         );
                     })}

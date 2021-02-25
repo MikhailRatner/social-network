@@ -1,4 +1,6 @@
 import { Component } from "react";
+import { Link } from "react-router-dom";
+
 import Logo from "./Logo";
 import ProfilePic from "./Profile-pic";
 import Uploader from "./Uploader";
@@ -70,6 +72,10 @@ export default class App extends Component {
                 <div className={"app"}>
                     <div className={"header"}>
                         <Logo />
+                        <Link to="/users">Find People</Link>
+                        <Link to="/chat">Chat</Link>
+                        <Link to="/friends">Friends</Link>
+                        <a href="/logout">Logout</a>
                         <ProfilePic
                             // Passing down props:
                             firstName={this.state.firstName}
